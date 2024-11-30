@@ -1,12 +1,4 @@
-import {
-  Stack,
-  Title,
-  Group,
-  Button,
-  Grid,
-  Badge,
-  Center,
-} from "@mantine/core";
+import { Stack, Title, Grid, Badge } from "@mantine/core";
 
 interface Props {
   experienceData: {
