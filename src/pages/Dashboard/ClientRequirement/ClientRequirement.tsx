@@ -2,6 +2,12 @@ import { Button, Grid, Stack, Textarea, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useRef } from "react";
 import JSConfetti from "js-confetti";
+import { RecommendationCard } from "./components/recommendation-card";
+import { useState } from "react";
+import {
+  getTeamMemberRecommendation,
+  IGetTeamMemberRecommendation,
+} from "../../../queries/get-team-member-recomendation";
 
 interface ClientRequirementForm {
   clientName: string;
@@ -10,6 +16,10 @@ interface ClientRequirementForm {
 
 export default function ClientRequirement() {
   const confetti = useRef(new JSConfetti());
+  const [teamMemberRecommendation, setTeamMemberRecommendation] =
+    useState<IGetTeamMemberRecommendation>();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -24,9 +34,16 @@ export default function ClientRequirement() {
     },
   });
 
-  const onSubmit = (values: ClientRequirementForm) => {
-    console.log(values);
-    confetti.current.addConfetti();
+  const onSubmit = async (values: ClientRequirementForm) => {
+    setLoading(true);
+    await getTeamMemberRecommendation(values.description)
+      .then((resp) => {
+        setTeamMemberRecommendation(resp as IGetTeamMemberRecommendation);
+      })
+      .finally(() => {
+        setLoading(false);
+        confetti.current.addConfetti();
+      });
   };
 
   return (
@@ -54,11 +71,20 @@ export default function ClientRequirement() {
             {...form.getInputProps("description")}
           />
           <Stack align="end">
-            <Button type="submit" w={100} size="md" bg={"#5F14EF"}>
-              Save
+            <Button type="submit" size="md" bg={"#5F14EF"} loading={loading}>
+              Get Recommendation
             </Button>
           </Stack>
         </Grid.Col>
+        {teamMemberRecommendation ? (
+          <RecommendationCard
+            english={teamMemberRecommendation.english}
+            name={teamMemberRecommendation.name}
+            seniority={teamMemberRecommendation.seniority}
+            tech_stack={teamMemberRecommendation.tech_stack}
+            reason={teamMemberRecommendation.reason}
+          />
+        ) : null}
       </Grid>
     </form>
   );
