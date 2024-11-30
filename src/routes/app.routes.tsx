@@ -26,10 +26,10 @@ export const AppRoutes: RouteObject[] = [
         path: Paths.TEAM_MEMBER,
         element: <TeamMembers />,
       },
-      // {
-      //   path: Paths.LOGIN,
-      //   element: <Login />,
-      // },
+      {
+        path: "*",
+        element: <Navigate to={Paths.HOME} />,
+      },
     ],
   },
 ];
