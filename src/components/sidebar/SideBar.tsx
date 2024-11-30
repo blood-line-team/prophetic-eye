@@ -1,59 +1,66 @@
-import { useState } from 'react';
-import {
-  IconLogout,
-  IconSwitchHorizontal,
-  IconNotebook,
-  IconUsers,
-} from '@tabler/icons-react';
-import { Code, Group } from '@mantine/core';
-import classes from './sidebar.module.css';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { IconLogout, IconNotebook, IconUsers } from "@tabler/icons-react";
+import { Button, Group, Stack } from "@mantine/core";
+import classes from "./sidebar.module.css";
+import { Paths } from "../../routes/path.routes";
+import { useNavigate } from "react-router-dom";
 
 const data = [
-  { link: '/client-requirements', label: 'Client Requirements', icon: IconNotebook },
-  { link: '', label: 'Team member experience', icon: IconUsers },
+  {
+    link: Paths.CLIENT_REQUIREMENT,
+    label: "Client Requirements",
+    icon: <IconNotebook size={16} />,
+  },
+  {
+    link: Paths.TEAM_MEMBER_EXPERIENCE,
+    label: "Team member experience",
+    icon: <IconUsers size={16} />,
+  },
 ];
 
 export function SideBar() {
-  const [active, setActive] = useState('Billing');
+  const [active, setActive] = useState(Paths.HOME);
+  const navigate = useNavigate();
 
   const links = data.map((item) => (
-    <Link
-      className={classes.link}
-      data-active={item.label === active || undefined}
-      to={item.link}
+    <Button
+      fullWidth
+      variant={active === item.link ? "light" : "transparent"}
+      fw="normal"
+      color="gray.6"
+      c="black"
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.label);
+      onClick={() => {
+        setActive(item.link);
+        navigate(item.link);
       }}
+      leftSection={item.icon}
+      justify="start"
     >
-      <item.icon className={classes.linkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </Link>
+      {item.label}
+    </Button>
   ));
 
   return (
-    <nav className={classes.navbar}>
-      <div className={classes.navbarMain}>
-        <Group className={classes.header} justify="space-between">
-          <img src='/logo/logo-sidebar.svg' height={60} width={150} />
-          <Code fw={700}>v2.0</Code>
+    <Stack
+      h="100vh"
+      p="md"
+      style={{
+        borderRight:
+          "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))",
+      }}
+    >
+      <Stack flex={1}>
+        <Group justify="space-between">
+          <img src="/logo/logo-sidebar.svg" height={60} width={150} />
         </Group>
-        {links}
-      </div>
+        <Stack gap={8}>{links}</Stack>
+      </Stack>
 
-      <div className={classes.footer}>
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
-        </a>
-
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconLogout className={classes.linkIcon} stroke={1.5} />
-          <span>Logout</span>
-        </a>
-      </div>
-    </nav>
+      <a href={Paths.CLIENT_REQUIREMENT} className={classes.link}>
+        <IconLogout className={classes.linkIcon} stroke={1.5} />
+        <span>Logout</span>
+      </a>
+    </Stack>
   );
 }
