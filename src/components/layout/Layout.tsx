@@ -1,13 +1,17 @@
 import { Outlet } from "react-router-dom";
 import { SideBar } from "../sidebar/SideBar";
-import { Group } from "@mantine/core";
+import { Grid, Group } from "@mantine/core";
 
 const Layout = () => {
   return (
-    <Group h={"100%"} align="normal" bg="gray.0">
-      <SideBar />
-      <Outlet />
-    </Group>
+    <Grid align="normal" bg="gray.0">
+      <Grid.Col span="content">
+        <SideBar />
+      </Grid.Col>
+      <Grid.Col span="auto">
+        <Outlet />
+      </Grid.Col>
+    </Grid>
   );
 };
 

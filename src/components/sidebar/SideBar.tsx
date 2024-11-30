@@ -46,12 +46,13 @@ export function SideBar() {
       h="100vh"
       p="md"
       bg="white"
+      maw={250}
       style={{
         borderRight:
           "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))",
       }}
     >
-      <Stack flex={1}>
+      <Stack>
         <Group justify="space-between">
           <img src="/logo/logo-sidebar.svg" height={60} width={150} />
         </Group>

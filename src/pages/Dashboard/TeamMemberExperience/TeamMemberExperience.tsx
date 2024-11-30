@@ -13,9 +13,9 @@ import {
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { randomId } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
-import { useTeamMemberStore } from "../../../store/use-team-member";
-// import { ExperienceUnits } from "./components/ExperienceUnits";
-// import { useState } from "react";
+
+import { useState } from "react";
+import { useGetTeamMemberExperience } from "../../../queries/team-member-experience.query";
 
 export interface Experience {
   id: string;
@@ -23,14 +23,46 @@ export interface Experience {
   details: string;
 }
 
+interface TeamMemberInformation {
+  name: string;
+  description: string;
+}
 
+export type TeamMemberInfo = {
+  id: string;
+  name: string;
+  description: string;
+  experienceUnits?: { id: string; description: string; stack: string }[];
+};
+
+export type ExperienceUserData = {
+  idTeamMember: number;
+  description: string;
+  tech_stack: string;
+};
 
 export const TeamMemberExperience = () => {
+  const [teamMembers, setTeamMembers] = useState<ExperienceUserData[]>();
 
+  console.log({ teamMembers });
 
-  const { setTeamMemberInformation } = useTeamMemberStore()
-  // const [dataReceived, setDataReceived] = useState(false)
-
+  const onSubmit = async (values: {
+    teamMemberInformation: TeamMemberInformation[];
+  }) => {
+    await Promise.all(
+      values.teamMemberInformation.map(async (item, index) => {
+        const data = await useGetTeamMemberExperience(item.description);
+        setTeamMembers((prev) => [
+          ...(prev ?? []),
+          {
+            idTeamMember: index,
+            description: data?.description ?? "",
+            tech_stack: data?.tech_stack ?? "",
+          },
+        ]);
+      })
+    );
+  };
 
   const form = useForm({
     mode: "uncontrolled",
@@ -39,7 +71,6 @@ export const TeamMemberExperience = () => {
         {
           name: "",
           description: "",
-          key: randomId(),
         },
       ],
     },
@@ -49,7 +80,7 @@ export const TeamMemberExperience = () => {
     .getValues()
     .teamMemberInformation.map((item, index) => (
       <Stack
-        key={item.key}
+        key={index}
         gap={16}
         style={{
           borderRadius: "24px",
@@ -76,7 +107,7 @@ export const TeamMemberExperience = () => {
           style={{ flex: 1 }}
           key={form.key(`teamMemberInformation.${index}.name`)}
           {...form.getInputProps(`teamMemberInformation.${index}.name`)}
-          data={['React', 'Angular', 'Vue', 'Svelte']}
+          data={["React", "Angular", "Vue", "Svelte"]}
         />
 
         <Textarea
@@ -105,17 +136,7 @@ export const TeamMemberExperience = () => {
 
   return (
     <Container w={"100%"} m={0}>
-      <form
-        onSubmit={form.onSubmit((values) =>
-          setTeamMemberInformation(
-            values.teamMemberInformation.map((item) => ({
-              description: item.description,
-              id: item.key,
-              name: item.name,
-            }))
-          )
-        )}
-      >
+      <form onSubmit={form.onSubmit(onSubmit)}>
         <Stack px={20} py={72}>
           <Stack>
             <Group justify="space-between">
@@ -145,9 +166,7 @@ export const TeamMemberExperience = () => {
             </Group>
             {clientsExperiencefields.length > 0 ? (
               <ScrollArea styles={{ viewport: { height: "70vh" } }}>
-                <Stack gap={16}>
-                  {clientsExperiencefields}
-                </Stack>
+                <Stack gap={16}>{clientsExperiencefields}</Stack>
               </ScrollArea>
             ) : (
               <Text c="dimmed" ta="center" size="lg">

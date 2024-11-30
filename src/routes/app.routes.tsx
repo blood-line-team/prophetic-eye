@@ -17,10 +17,6 @@ export const AppRoutes: RouteObject[] = [
         path: Paths.TEAM_MEMBER_EXPERIENCE,
         element: <TeamMemberExperience />,
       },
-      // {
-      //   path: Paths.LOGIN,
-      //   element: <Login />,
-      // },
     ],
   },
 ];
