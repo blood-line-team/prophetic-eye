@@ -4,31 +4,24 @@ import {
   Stack,
   Textarea,
   TextInput,
-  Title
+  Title,
 } from "@mantine/core";
 
 export default function ClientRequirement() {
   return (
-    <Container w={'100%'} m={0}>
-      <Stack
-        px={20}
-        py={30}
-      >
-        <Title>
-          Client Information
-        </Title>
+    <Container w={"100%"} m={0}>
+      <Stack px={20} py={30}>
+        <Title>Client Information</Title>
 
         <Stack>
-          <span style={{ opacity: 0.5 }}>
-            Client details
-          </span>
+          <span style={{ opacity: 0.5 }}>Client details</span>
           <TextInput
             // withAsterisk
             label="Email"
             placeholder="your@email.com"
             size="md"
-          // key={form.key('email')}
-          // {...form.getInputProps('email')}
+            // key={form.key('email')}
+            // {...form.getInputProps('email')}
           />
           <Textarea
             label="Input label"
@@ -38,9 +31,7 @@ export default function ClientRequirement() {
         </Stack>
 
         <Stack>
-          <span style={{ opacity: 0.5 }}>
-            Client details
-          </span>
+          <span style={{ opacity: 0.5 }}>Client details</span>
           <Textarea
             label="Description"
             placeholder="Type requirements"
@@ -49,11 +40,11 @@ export default function ClientRequirement() {
         </Stack>
 
         <Stack align="end">
-          <Button w={100} size="md" bg={'#5F14EF'}>
+          <Button w={100} size="md" bg={"#5F14EF"}>
             Save
           </Button>
         </Stack>
-      </Stack >
+      </Stack>
     </Container>
-  )
+  );
 }
