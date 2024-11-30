@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { getTeamMemberExperience } from "../../../queries/team-member-experience.query";
 import { getClients, IGetClients } from "../../../queries/get-clients.query";
 import { ExperienceUnits } from "./components/ExperienceUnits";
+import { getTeamMembersData } from "../../../queries/get-team-members";
 
 export interface Experience {
   id: string;
@@ -46,9 +47,11 @@ export type ExperienceUserData = {
 };
 
 export const TeamMemberExperience = () => {
-  const [teamMembers, setTeamMembers] = useState<ExperienceUserData[]>();
+  const [experienceUnits, setExperienceUnits] =
+    useState<ExperienceUserData[]>();
 
   const [clientsData, setClientsData] = useState<string[]>([]);
+  const [teamMembers, setTeamMembers] = useState<string[]>([]);
 
   const onSubmit = async (values: {
     teamMemberInformation: TeamMemberInformation[];
@@ -56,7 +59,7 @@ export const TeamMemberExperience = () => {
     await Promise.all(
       values.teamMemberInformation.map(async (item, index) => {
         const data = await getTeamMemberExperience(item.description);
-        setTeamMembers((prev) => [
+        setExperienceUnits((prev) => [
           ...(prev ?? []),
           {
             idTeamMember: index,
@@ -74,6 +77,7 @@ export const TeamMemberExperience = () => {
         {
           name: "",
           description: "",
+          teamMember: "",
         },
       ],
     },
@@ -105,6 +109,14 @@ export const TeamMemberExperience = () => {
           </ActionIcon>
         </div>
         <Autocomplete
+          label="Team member"
+          placeholder="Team member"
+          style={{ flex: 1 }}
+          key={form.key(`teamMemberInformation.${index}.teamMember`)}
+          {...form.getInputProps(`teamMemberInformation.${index}.teamMember`)}
+          data={teamMembers}
+        />
+        <Autocomplete
           label="Client"
           placeholder="Client name"
           style={{ flex: 1 }}
@@ -125,13 +137,13 @@ export const TeamMemberExperience = () => {
           }}
         />
 
-        {teamMembers
-          ? teamMembers?.map((teamMember, index) => {
-              if (teamMember.idTeamMember !== index) return;
+        {experienceUnits
+          ? experienceUnits?.map((experienceUnit, index) => {
+              if (experienceUnit.idTeamMember !== index) return;
               return (
                 <ExperienceUnits
                   key={index}
-                  experienceData={teamMember.experienceData}
+                  experienceData={experienceUnit.experienceData}
                 />
               );
             })
@@ -149,11 +161,21 @@ export const TeamMemberExperience = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const getTeamMembers = async () => {
+      const teamMembers = await getTeamMembersData();
+      if (teamMembers) {
+        setTeamMembers(teamMembers.map((member) => member.name));
+      }
+    };
+    getTeamMembers();
+  }, []);
+
   return (
     <Container w={"100%"} m={0}>
       <form onSubmit={form.onSubmit(onSubmit)}>
-        <Stack px={20} py={72}>
-          <Stack>
+        <Stack px={20} py={72} h="fit-content">
+          <Stack h="fit-content">
             <Group justify="space-between">
               <span style={{ opacity: 0.5 }}>Experience with clients</span>
               <Tooltip

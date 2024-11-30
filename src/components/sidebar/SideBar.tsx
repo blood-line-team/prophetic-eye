@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { IconLogout, IconNotebook, IconUsers } from "@tabler/icons-react";
+import { IconNotebook, IconUsers } from "@tabler/icons-react";
 import { Button, Group, Stack } from "@mantine/core";
-import classes from "./sidebar.module.css";
 import { Paths } from "../../routes/path.routes";
 import { useNavigate } from "react-router-dom";
 
@@ -58,16 +57,16 @@ export function SideBar() {
       }}
     >
       <Stack>
-        <Group justify="space-between">
-          <img src="/logo/logo-sidebar.svg" height={60} width={150} />
+        <Group justify="space-between" style={{ cursor: "pointer" }}>
+          <img
+            src="/logo/logo-sidebar.svg"
+            height={60}
+            width={150}
+            onClick={() => navigate(Paths.HOME)}
+          />
         </Group>
         <Stack gap={8}>{links}</Stack>
       </Stack>
-
-      <a href={Paths.CLIENT_REQUIREMENT} className={classes.link}>
-        <IconLogout className={classes.linkIcon} stroke={1.5} />
-        <span>Logout</span>
-      </a>
     </Stack>
   );
 }

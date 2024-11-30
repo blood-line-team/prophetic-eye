@@ -1,4 +1,4 @@
-import { RouteObject } from "react-router-dom";
+import { Navigate, RouteObject } from "react-router-dom";
 import { Paths } from "./path.routes";
 import Layout from "../components/layout/Layout";
 import ClientRequirement from "../pages/Dashboard/ClientRequirement/ClientRequirement";
@@ -10,6 +10,10 @@ export const AppRoutes: RouteObject[] = [
     path: Paths.HOME,
     element: <Layout />,
     children: [
+      {
+        path: Paths.HOME,
+        element: <Navigate to={Paths.CLIENT_REQUIREMENT} />,
+      },
       {
         path: Paths.CLIENT_REQUIREMENT,
         element: <ClientRequirement />,
