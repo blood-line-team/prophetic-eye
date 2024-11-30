@@ -28,6 +28,8 @@
   npm run dev or yarn dev
 ```
 
+You can see the deploy [here](https://prophetic-eye.vercel.app/)
+
 
 
 
