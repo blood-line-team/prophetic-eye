@@ -1,13 +1,59 @@
-import { Stack, Title } from "@mantine/core";
+import {
+  Button,
+  Container,
+  Stack,
+  Textarea,
+  TextInput,
+  Title
+} from "@mantine/core";
 
 export default function ClientRequirement() {
   return (
-    <Stack
-      px={20}
-      py={30}>
-      <Title>
-        Client Information
-      </Title>
-    </Stack>
+    <Container w={'100%'} m={0}>
+      <Stack
+        px={20}
+        py={30}
+      >
+        <Title>
+          Client Information
+        </Title>
+
+        <Stack>
+          <span style={{ opacity: 0.5 }}>
+            Client details
+          </span>
+          <TextInput
+            // withAsterisk
+            label="Email"
+            placeholder="your@email.com"
+            size="md"
+          // key={form.key('email')}
+          // {...form.getInputProps('email')}
+          />
+          <Textarea
+            label="Input label"
+            placeholder="Input placeholder"
+            size="md"
+          />
+        </Stack>
+
+        <Stack>
+          <span style={{ opacity: 0.5 }}>
+            Client details
+          </span>
+          <Textarea
+            label="Description"
+            placeholder="Type requirements"
+            size="md"
+          />
+        </Stack>
+
+        <Stack align="end">
+          <Button w={100} size="md" bg={'#5F14EF'}>
+            Save
+          </Button>
+        </Stack>
+      </Stack >
+    </Container>
   )
 }
