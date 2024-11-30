@@ -1,6 +1,12 @@
 import { Stack, Title, Group, Button } from "@mantine/core";
 
-export const ExperienceUnits = () => {
+interface Props {
+  stack: string;
+  description: string;
+}
+
+
+export const ExperienceUnits = ({ stack, description }: Props) => {
   return (
     <Stack bg={"#F8F9FA"} p={10} style={{ borderRadius: "10px" }}>
       <Title size={"h4"}>Experience Units</Title>
@@ -11,9 +17,9 @@ export const ExperienceUnits = () => {
         style={{ borderRadius: "10px" }}
         bg={"white"}
       >
-        Experience description for a technology and description large
+        {description}
         <Button disabled style={{ cursor: "default", color: "black" }}>
-          React
+          {stack}
         </Button>
       </Group>
     </Stack>

@@ -5,16 +5,17 @@ import {
   Group,
   ScrollArea,
   Stack,
-  TextInput,
   Textarea,
   Tooltip,
   Text,
-  Box,
+  Autocomplete,
 } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { randomId } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { useTeamMemberStore } from "../../../store/use-team-member";
+// import { ExperienceUnits } from "./components/ExperienceUnits";
+// import { useState } from "react";
 
 export interface Experience {
   id: string;
@@ -22,7 +23,15 @@ export interface Experience {
   details: string;
 }
 
+
+
 export const TeamMemberExperience = () => {
+
+
+  const { setTeamMemberInformation } = useTeamMemberStore()
+  // const [dataReceived, setDataReceived] = useState(false)
+
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -35,7 +44,7 @@ export const TeamMemberExperience = () => {
       ],
     },
   });
-  const { setTeamMemberInformation } = useTeamMemberStore();
+
   const clientsExperiencefields = form
     .getValues()
     .teamMemberInformation.map((item, index) => (
@@ -61,13 +70,15 @@ export const TeamMemberExperience = () => {
             <IconTrash size={12} />
           </ActionIcon>
         </div>
-        <TextInput
+        <Autocomplete
           label="Client"
           placeholder="Client name"
           style={{ flex: 1 }}
           key={form.key(`teamMemberInformation.${index}.name`)}
           {...form.getInputProps(`teamMemberInformation.${index}.name`)}
+          data={['React', 'Angular', 'Vue', 'Svelte']}
         />
+
         <Textarea
           label="Details and achievements"
           placeholder="Detail your experience with the client"
@@ -75,6 +86,20 @@ export const TeamMemberExperience = () => {
           key={form.key(`teamMemberInformation.${index}.description`)}
           {...form.getInputProps(`teamMemberInformation.${index}.description`)}
         />
+        {/* {
+          dataReceived
+            ?
+            teamMemberInformation.filter(member => member.id === item.key)
+            .map(member => {
+              return(
+                <ExperienceUnits description={member.experienceUnits['description']} stack={member.experienceUnits['stack']}/>
+              )
+            })
+              
+            :
+            <></>
+          // <ExperienceUnits />
+        } */}
       </Stack>
     ));
 
@@ -120,7 +145,9 @@ export const TeamMemberExperience = () => {
             </Group>
             {clientsExperiencefields.length > 0 ? (
               <ScrollArea styles={{ viewport: { height: "70vh" } }}>
-                <Stack gap={16}>{clientsExperiencefields}</Stack>
+                <Stack gap={16}>
+                  {clientsExperiencefields}
+                </Stack>
               </ScrollArea>
             ) : (
               <Text c="dimmed" ta="center" size="lg">

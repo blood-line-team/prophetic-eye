@@ -16,22 +16,21 @@ export default function ClientRequirement() {
         <Stack>
           <span style={{ opacity: 0.5 }}>Client details</span>
           <TextInput
-            // withAsterisk
-            label="Email"
-            placeholder="your@email.com"
+            label="Client"
+            placeholder="Client name"
             size="md"
-            // key={form.key('email')}
-            // {...form.getInputProps('email')}
+          // key={form.key('email')}
+          // {...form.getInputProps('email')}
           />
           <Textarea
-            label="Input label"
-            placeholder="Input placeholder"
+            label="Description"
+            placeholder="Type description"
             size="md"
           />
         </Stack>
 
         <Stack>
-          <span style={{ opacity: 0.5 }}>Client details</span>
+          <span style={{ opacity: 0.5 }}>Client Requirements</span>
           <Textarea
             label="Description"
             placeholder="Type requirements"
