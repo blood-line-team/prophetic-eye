@@ -1,13 +1,20 @@
-import { v4 as uuidv4 } from 'uuid';
-
-import { ActionIcon, Button, Container, Group, Stack, Title, Tooltip } from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
-import { useState } from "react";
-import { PreviousExperience } from "./components/PreviousExperience";
-import { ExperienceClients } from './components/ExperienceClients';
-import { useTeamMemberStore } from '../../../store/use-team-member';
-import { randomId } from '@mantine/hooks';
-import { useForm } from '@mantine/form';
+import {
+  ActionIcon,
+  Button,
+  Container,
+  Group,
+  ScrollArea,
+  Stack,
+  TextInput,
+  Textarea,
+  Tooltip,
+  Text,
+  Box,
+} from "@mantine/core";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { randomId } from "@mantine/hooks";
+import { useForm } from "@mantine/form";
+import { useTeamMemberStore } from "../../../store/use-team-member";
 
 export interface Experience {
   id: string;
@@ -15,169 +22,120 @@ export interface Experience {
   details: string;
 }
 
-
 export const TeamMemberExperience = () => {
-
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: "uncontrolled",
     initialValues: {
-      teamMemberInformation: [{
-        name: '',
-        description: '',
-        key: randomId(),
-      },]
-    }
-  })
-
-  const addFields = () => {
-    form.insertListItem('employees', { name: '', active: false, key: randomId() })
-  }
-
-
+      teamMemberInformation: [
+        {
+          name: "",
+          description: "",
+          key: randomId(),
+        },
+      ],
+    },
+  });
+  const { setTeamMemberInformation } = useTeamMemberStore();
+  const clientsExperiencefields = form
+    .getValues()
+    .teamMemberInformation.map((item, index) => (
+      <Stack
+        key={item.key}
+        gap={16}
+        style={{
+          borderRadius: "24px",
+          position: "relative",
+        }}
+        bg="white"
+        py={24}
+        px={16}
+      >
+        <div style={{ position: "absolute", right: "16px", top: "12px" }}>
+          <ActionIcon
+            variant="light"
+            color="gray.6"
+            onClick={() => {
+              form.removeListItem("teamMemberInformation", index);
+            }}
+          >
+            <IconTrash size={12} />
+          </ActionIcon>
+        </div>
+        <TextInput
+          label="Client"
+          placeholder="Client name"
+          style={{ flex: 1 }}
+          key={form.key(`teamMemberInformation.${index}.name`)}
+          {...form.getInputProps(`teamMemberInformation.${index}.name`)}
+        />
+        <Textarea
+          label="Details and achievements"
+          placeholder="Detail your experience with the client"
+          style={{ flex: 1 }}
+          key={form.key(`teamMemberInformation.${index}.description`)}
+          {...form.getInputProps(`teamMemberInformation.${index}.description`)}
+        />
+      </Stack>
+    ));
 
   return (
-    <Container w={'100%'} m={0}>
-      <Stack
-        px={20}
-        py={30}
+    <Container w={"100%"} m={0}>
+      <form
+        onSubmit={form.onSubmit((values) =>
+          setTeamMemberInformation(
+            values.teamMemberInformation.map((item) => ({
+              description: item.description,
+              id: item.key,
+              name: item.name,
+            }))
+          )
+        )}
       >
-        <Title>
-          Team member experience
-        </Title>
-        <Stack
-        >
-          <Group
-            justify="space-between"
-          >
-            <span style={{ opacity: 0.5 }}>
-              Previous Experience
-            </span>
-            <Tooltip
-              label={'Add new'}
-              arrowSize={4}
-              arrowPosition="side" arrowOffset={5}
-              withArrow
-              position="left"
-            >
-              <ActionIcon variant="default" color="gray" bg={'white'} onClick={addFields}>
-                <IconPlus opacity={0.7} />
-              </ActionIcon>
-            </Tooltip>
-          </Group>
+        <Stack px={20} py={72}>
+          <Stack>
+            <Group justify="space-between">
+              <span style={{ opacity: 0.5 }}>Experience with clients</span>
+              <Tooltip
+                label={"Add new"}
+                arrowSize={4}
+                arrowPosition="side"
+                arrowOffset={5}
+                withArrow
+                position="left"
+              >
+                <ActionIcon
+                  variant="default"
+                  color="gray"
+                  bg={"white"}
+                  onClick={() => {
+                    form.insertListItem("teamMemberInformation", {
+                      name: "",
+                      key: randomId(),
+                    });
+                  }}
+                >
+                  <IconPlus opacity={0.7} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
+            {clientsExperiencefields.length > 0 ? (
+              <ScrollArea styles={{ viewport: { height: "70vh" } }}>
+                <Stack gap={16}>{clientsExperiencefields}</Stack>
+              </ScrollArea>
+            ) : (
+              <Text c="dimmed" ta="center" size="lg">
+                Add your previous work with clients
+              </Text>
+            )}
+          </Stack>
         </Stack>
 
-        <form>
-          <Stack
-            gap={40}
-            style={{
-              borderRadius: '10px',
-              backgroundImage: 'repeating-linear-gradient(90deg, #ced4da, #ced4da 12px, transparent 12px, transparent 16px), repeating-linear-gradient(180deg, #ced4da, #ced4da 12px, transparent 12px, transparent 16px), repeating-linear-gradient(90deg, #ced4da, #ced4da 12px, transparent 12px, transparent 16px), repeating-linear-gradient(180deg, #ced4da, #ced4da 12px, transparent 12px, transparent 16px)',
-              backgroundPosition: 'left top, right top, left bottom, left top',
-              backgroundRepeat: 'repeat-x, repeat-y, repeat-x, repeat-y',
-              backgroundSize: '100% 1px, 1px 100%, 100% 1px, 1px 100%'
-            }}
-            p={20}
-          >
-            {
-              form.map((exp, key) => {
-                return (
-                  <PreviousExperience form={form} />
-                )
-              })
-            }
-
-            {/* luego de presionar el boton */}
-            <Stack bg={'#F8F9FA'} p={10} style={{ borderRadius: '10px' }}>
-              <Title size={'h4'}>
-                Experience Units
-              </Title>
-              <Group justify='space-between' px={10} py={5} style={{ borderRadius: '10px' }} bg={'white'}>
-                Experience description for a technology and description large
-                <Button
-                  disabled
-                  style={{ cursor: "default", color: "black" }}
-                >
-                  React
-                </Button>
-              </Group>
-            </Stack>
-          </Stack>
-        </form>
-      </Stack >
-
-
-      <Stack
-        px={20}
-        py={30}
-      >
-        <Stack
-        >
-          <Group
-            justify="space-between"
-          >
-            <span style={{ opacity: 0.5 }}>
-              Experience with clients
-            </span>
-            <Tooltip
-              label={'Add new'}
-              arrowSize={4}
-              arrowPosition="side" arrowOffset={5}
-              withArrow
-              position="left"
-            >
-              <ActionIcon variant="default" color="gray" bg={'white'} onClick={addFields}>
-                <IconPlus opacity={0.7} />
-              </ActionIcon>
-            </Tooltip>
-          </Group>
+        <Stack align="end">
+          <Button w={"fit-content"} size="md" bg={"#5F14EF"} type="submit">
+            Generate Experience Units
+          </Button>
         </Stack>
-
-        <form>
-          <Stack
-            gap={40}
-            style={{
-              borderRadius: '10px',
-              backgroundImage: 'repeating-linear-gradient(90deg, #ced4da, #ced4da 12px, transparent 12px, transparent 16px), repeating-linear-gradient(180deg, #ced4da, #ced4da 12px, transparent 12px, transparent 16px), repeating-linear-gradient(90deg, #ced4da, #ced4da 12px, transparent 12px, transparent 16px), repeating-linear-gradient(180deg, #ced4da, #ced4da 12px, transparent 12px, transparent 16px)',
-              backgroundPosition: 'left top, right top, left bottom, left top',
-              backgroundRepeat: 'repeat-x, repeat-y, repeat-x, repeat-y',
-              backgroundSize: '100% 1px, 1px 100%, 100% 1px, 1px 100%'
-            }}
-            p={20}
-          >
-            {
-              experiences.map((exp, key) => {
-                return (
-                  <ExperienceClients onDelete={() => { setExperiences((previewsValues) => previewsValues.filter(value => value.id !== exp.id)) }} key={key} />
-                )
-              })
-            }
-
-            {/* luego de presionar el boton */}
-            <Stack bg={'#F8F9FA'} p={10} style={{ borderRadius: '10px' }}>
-              <Title size={'h4'}>
-                Experience Units
-              </Title>
-              <Group justify='space-between' px={10} py={5} style={{ borderRadius: '10px' }} bg={'white'}>
-                Experience description for a technology and description large
-                <Button
-                  disabled
-                  style={{ cursor: "default", color: "black" }}
-                >
-                  React
-                </Button>
-              </Group>
-            </Stack>
-          </Stack>
-        </form>
-      </Stack >
-
-      <Stack align="end">
-        <Button w={'fit-content'} size="md" bg={'#5F14EF'}>
-          Generate Experience Units
-        </Button>
-      </Stack>
+      </form>
     </Container>
   );
 };
-
-

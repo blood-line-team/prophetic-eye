@@ -45,6 +45,7 @@ export function SideBar() {
     <Stack
       h="100vh"
       p="md"
+      bg="white"
       style={{
         borderRight:
           "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))",
