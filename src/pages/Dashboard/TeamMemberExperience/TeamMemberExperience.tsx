@@ -14,8 +14,9 @@ import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { randomId } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 
-import { useState } from "react";
-import { useGetTeamMemberExperience } from "../../../queries/team-member-experience.query";
+import { useEffect, useState } from "react";
+import { getTeamMemberExperience } from "../../../queries/team-member-experience.query";
+import { getClients, IGetClients } from "../../../queries/get-clients.query";
 
 export interface Experience {
   id: string;
@@ -44,6 +45,10 @@ export type ExperienceUserData = {
 export const TeamMemberExperience = () => {
   const [teamMembers, setTeamMembers] = useState<ExperienceUserData[]>();
 
+  const [clientsData, setClientsData] = useState<string[]>([]);
+
+  console.log({ clientsData });
+
   console.log({ teamMembers });
 
   const onSubmit = async (values: {
@@ -51,7 +56,7 @@ export const TeamMemberExperience = () => {
   }) => {
     await Promise.all(
       values.teamMemberInformation.map(async (item, index) => {
-        const data = await useGetTeamMemberExperience(item.description);
+        const data = await getTeamMemberExperience(item.description);
         setTeamMembers((prev) => [
           ...(prev ?? []),
           {
@@ -107,7 +112,7 @@ export const TeamMemberExperience = () => {
           style={{ flex: 1 }}
           key={form.key(`teamMemberInformation.${index}.name`)}
           {...form.getInputProps(`teamMemberInformation.${index}.name`)}
-          data={["React", "Angular", "Vue", "Svelte"]}
+          data={clientsData}
         />
 
         <Textarea
@@ -133,6 +138,16 @@ export const TeamMemberExperience = () => {
         } */}
       </Stack>
     ));
+
+  useEffect(() => {
+    getClients().then((data) => {
+      if (data) {
+        setClientsData([
+          ...new Set((data as IGetClients[]).map((d) => d.name)),
+        ]);
+      }
+    });
+  }, []);
 
   return (
     <Container w={"100%"} m={0}>

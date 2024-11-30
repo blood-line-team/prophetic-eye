@@ -5,14 +5,12 @@ interface ITeamMemberExperience {
   tech_stack: string;
 }
 
-export const useGetTeamMemberExperience = async (
-  project_description: string
-) => {
+export const getTeamMemberExperience = async (project_description: string) => {
   try {
     const { data } = await axiosClient.get<ITeamMemberExperience>(
       "/get-team-member-experience-units",
       {
-        params: {
+        data: {
           project_description,
         },
       }
