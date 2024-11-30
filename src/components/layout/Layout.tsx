@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { SideBar } from "../sidebar/SideBar";
-import { Grid, Group } from "@mantine/core";
+import { Grid } from "@mantine/core";
 
 const Layout = () => {
   return (

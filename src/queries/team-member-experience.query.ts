@@ -10,6 +10,9 @@ export const getTeamMemberExperience = async (project_description: string) => {
     const { data } = await axiosClient.get<ITeamMemberExperience>(
       "/get-team-member-experience-units",
       {
+        headers: {
+          Accept: "application/json",
+        },
         data: {
           project_description,
         },

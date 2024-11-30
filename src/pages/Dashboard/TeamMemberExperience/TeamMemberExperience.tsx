@@ -83,7 +83,7 @@ export const TeamMemberExperience = () => {
 
   const clientsExperiencefields = form
     .getValues()
-    .teamMemberInformation.map((item, index) => (
+    .teamMemberInformation.map((_, index) => (
       <Stack
         key={index}
         gap={16}
