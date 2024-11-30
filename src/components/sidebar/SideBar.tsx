@@ -20,7 +20,7 @@ const data = [
 
 export function SideBar() {
   const [active, setActive] = useState(Paths.HOME);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const links = data.map((item) => (
     <Button
@@ -31,7 +31,7 @@ export function SideBar() {
       c="black"
       key={item.label}
       onClick={() => {
-        setActive(item.label);
+        setActive(item.link);
         navigate(item.link);
       }}
       leftSection={item.icon}
