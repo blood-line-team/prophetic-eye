@@ -1,5 +1,7 @@
 import { Button, Grid, Stack, Textarea, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useRef } from "react";
+import JSConfetti from "js-confetti";
 
 interface ClientRequirementForm {
   clientName: string;
@@ -7,6 +9,7 @@ interface ClientRequirementForm {
 }
 
 export default function ClientRequirement() {
+  const confetti = useRef(new JSConfetti());
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -23,6 +26,7 @@ export default function ClientRequirement() {
 
   const onSubmit = (values: ClientRequirementForm) => {
     console.log(values);
+    confetti.current.addConfetti();
   };
 
   return (
