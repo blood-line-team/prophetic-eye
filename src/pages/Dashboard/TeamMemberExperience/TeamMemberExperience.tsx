@@ -58,11 +58,14 @@ export const TeamMemberExperience = () => {
   const [clientsData, setClientsData] = useState<string[]>([]);
   const [teamMembers, setTeamMembers] = useState<string[]>([]);
 
+  const [generateExperienceUnits, setGenerateExperiencesUnits] =
+    useState(false);
   const [saveExperienceUnits, setSaveExperienceUnits] = useState(false);
 
   const onSubmit = async (values: {
     teamMemberInformation: TeamMemberInformation[];
   }) => {
+    setGenerateExperiencesUnits(true);
     await Promise.all(
       values.teamMemberInformation.map(async (item, index) => {
         const data = await getTeamMemberExperience(item.description);
@@ -76,7 +79,9 @@ export const TeamMemberExperience = () => {
           },
         ]);
       })
-    );
+    ).finally(() => {
+      setGenerateExperiencesUnits(false);
+    });
   };
 
   const form = useForm({
@@ -157,17 +162,12 @@ export const TeamMemberExperience = () => {
           {...form.getInputProps(`teamMemberInformation.${index}.description`)}
         />
 
-        {experienceUnits
-          ? experienceUnits?.map((experienceUnit, index) => {
-              if (experienceUnit.idTeamMember !== index) return;
-              return (
-                <ExperienceUnits
-                  key={index}
-                  experienceData={experienceUnit.experienceData}
-                />
-              );
-            })
-          : null}
+        {experienceUnits && experienceUnits[index] ? (
+          <ExperienceUnits
+            key={index}
+            experienceData={experienceUnits[index].experienceData}
+          />
+        ) : null}
       </Stack>
     ));
 
@@ -190,8 +190,6 @@ export const TeamMemberExperience = () => {
     };
     getTeamMembers();
   }, []);
-
-  console.log({ teamMembers });
 
   return (
     <Container w={"100%"} m={0}>
@@ -237,8 +235,18 @@ export const TeamMemberExperience = () => {
 
         <Stack align="end">
           <Flex gap={16}>
-            <Button w={"fit-content"} size="md" bg={"#5F14EF"} type="submit">
-              Generate Experience Units
+            <Button
+              w={"fit-content"}
+              size="md"
+              color={"#5F14EF"}
+              type="submit"
+              loading={generateExperienceUnits}
+              disabled={generateExperienceUnits}
+              variant={experienceUnits ? "outline" : "filled"}
+            >
+              {experienceUnits
+                ? "Regenerate Experience Units"
+                : "Generate Experience Units"}
             </Button>
             {experienceUnits ? (
               <Button
