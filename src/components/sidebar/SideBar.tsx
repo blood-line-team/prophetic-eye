@@ -51,7 +51,7 @@ export function SideBar() {
       h="100vh"
       p="md"
       bg="white"
-      maw={250}
+      maw={270}
       style={{
         borderRight:
           "1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))",

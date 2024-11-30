@@ -7,15 +7,10 @@ interface ITeamMemberExperience {
 
 export const getTeamMemberExperience = async (project_description: string) => {
   try {
-    const { data } = await axiosClient.get<ITeamMemberExperience>(
+    const { data } = await axiosClient.post<ITeamMemberExperience[]>(
       "/get-team-member-experience-units",
       {
-        headers: {
-          Accept: "application/json",
-        },
-        data: {
-          project_description,
-        },
+        project_description,
       }
     );
 

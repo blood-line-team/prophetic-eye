@@ -17,6 +17,7 @@ import { useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
 import { getTeamMemberExperience } from "../../../queries/team-member-experience.query";
 import { getClients, IGetClients } from "../../../queries/get-clients.query";
+import { ExperienceUnits } from "./components/ExperienceUnits";
 
 export interface Experience {
   id: string;
@@ -38,18 +39,16 @@ export type TeamMemberInfo = {
 
 export type ExperienceUserData = {
   idTeamMember: number;
-  description: string;
-  tech_stack: string;
+  experienceData: {
+    description: string;
+    tech_stack: string;
+  }[];
 };
 
 export const TeamMemberExperience = () => {
   const [teamMembers, setTeamMembers] = useState<ExperienceUserData[]>();
 
   const [clientsData, setClientsData] = useState<string[]>([]);
-
-  console.log({ clientsData });
-
-  console.log({ teamMembers });
 
   const onSubmit = async (values: {
     teamMemberInformation: TeamMemberInformation[];
@@ -61,8 +60,7 @@ export const TeamMemberExperience = () => {
           ...(prev ?? []),
           {
             idTeamMember: index,
-            description: data?.description ?? "",
-            tech_stack: data?.tech_stack ?? "",
+            experienceData: data ?? [],
           },
         ]);
       })
@@ -118,24 +116,26 @@ export const TeamMemberExperience = () => {
         <Textarea
           label="Details and achievements"
           placeholder="Detail your experience with the client"
-          style={{ flex: 1 }}
           key={form.key(`teamMemberInformation.${index}.description`)}
           {...form.getInputProps(`teamMemberInformation.${index}.description`)}
+          h={100}
+          styles={{
+            wrapper: { height: "100%" },
+            input: { height: "100%" },
+          }}
         />
-        {/* {
-          dataReceived
-            ?
-            teamMemberInformation.filter(member => member.id === item.key)
-            .map(member => {
-              return(
-                <ExperienceUnits description={member.experienceUnits['description']} stack={member.experienceUnits['stack']}/>
-              )
+
+        {teamMembers
+          ? teamMembers?.map((teamMember, index) => {
+              if (teamMember.idTeamMember !== index) return;
+              return (
+                <ExperienceUnits
+                  key={index}
+                  experienceData={teamMember.experienceData}
+                />
+              );
             })
-              
-            :
-            <></>
-          // <ExperienceUnits />
-        } */}
+          : null}
       </Stack>
     ));
 
