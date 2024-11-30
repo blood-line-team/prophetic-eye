@@ -9,6 +9,7 @@ import {
   Tooltip,
   Text,
   Autocomplete,
+  Flex,
 } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { randomId } from "@mantine/hooks";
@@ -19,6 +20,7 @@ import { getTeamMemberExperience } from "../../../queries/team-member-experience
 import { getClients, IGetClients } from "../../../queries/get-clients.query";
 import { ExperienceUnits } from "./components/ExperienceUnits";
 import { getTeamMembersData } from "../../../queries/get-team-members";
+import { postAddExperienceUnits } from "../../../queries/post-add-experience-units.query";
 
 export interface Experience {
   id: string;
@@ -29,6 +31,7 @@ export interface Experience {
 interface TeamMemberInformation {
   name: string;
   description: string;
+  team_member: string;
 }
 
 export type TeamMemberInfo = {
@@ -44,6 +47,8 @@ export type ExperienceUserData = {
     description: string;
     tech_stack: string;
   }[];
+  team_member: string;
+  project: string;
 };
 
 export const TeamMemberExperience = () => {
@@ -52,6 +57,8 @@ export const TeamMemberExperience = () => {
 
   const [clientsData, setClientsData] = useState<string[]>([]);
   const [teamMembers, setTeamMembers] = useState<string[]>([]);
+
+  const [saveExperienceUnits, setSaveExperienceUnits] = useState(false);
 
   const onSubmit = async (values: {
     teamMemberInformation: TeamMemberInformation[];
@@ -64,6 +71,8 @@ export const TeamMemberExperience = () => {
           {
             idTeamMember: index,
             experienceData: data ?? [],
+            team_member: item.team_member,
+            project: item.name,
           },
         ]);
       })
@@ -77,11 +86,26 @@ export const TeamMemberExperience = () => {
         {
           name: "",
           description: "",
-          teamMember: "",
+          team_member: "",
         },
       ],
     },
   });
+
+  const onSaveExperienceUnits = async () => {
+    setSaveExperienceUnits(true);
+    await Promise.all(
+      experienceUnits?.map(async (experienceUnit) => {
+        await postAddExperienceUnits({
+          experience_units: experienceUnit.experienceData,
+          project: experienceUnit.project,
+          team_member: experienceUnit.team_member,
+        });
+      }) ?? []
+    ).finally(() => {
+      setSaveExperienceUnits(false);
+    });
+  };
 
   const clientsExperiencefields = form
     .getValues()
@@ -112,8 +136,9 @@ export const TeamMemberExperience = () => {
         <Autocomplete
           label="Team member"
           placeholder="Team member"
-          key={form.key(`teamMemberInformation.${index}.teamMember`)}
-          {...form.getInputProps(`teamMemberInformation.${index}.teamMember`)}
+          style={{ flex: 1 }}
+          key={form.key(`teamMemberInformation.${index}.team_member`)}
+          {...form.getInputProps(`teamMemberInformation.${index}.team_member`)}
           data={teamMembers}
         />
         <Autocomplete
@@ -166,6 +191,8 @@ export const TeamMemberExperience = () => {
     getTeamMembers();
   }, []);
 
+  console.log({ teamMembers });
+
   return (
     <Container w={"100%"} m={0}>
       <form onSubmit={form.onSubmit(onSubmit)}>
@@ -192,7 +219,7 @@ export const TeamMemberExperience = () => {
                     });
                   }}
                 >
-                  <IconPlus opacity={0.7} />
+                  <IconPlus />
                 </ActionIcon>
               </Tooltip>
             </Group>
@@ -209,9 +236,26 @@ export const TeamMemberExperience = () => {
         </Stack>
 
         <Stack align="end">
-          <Button w={"fit-content"} size="md" bg={"#5F14EF"} type="submit">
-            Generate Experience Units
-          </Button>
+          <Flex gap={16}>
+            <Button w={"fit-content"} size="md" bg={"#5F14EF"} type="submit">
+              Generate Experience Units
+            </Button>
+            {experienceUnits ? (
+              <Button
+                w={"fit-content"}
+                size="md"
+                bg={"#5F14EF"}
+                onClick={() => {
+                  onSaveExperienceUnits();
+                  setExperienceUnits([]);
+                  form.reset();
+                }}
+                loading={saveExperienceUnits}
+              >
+                Save
+              </Button>
+            ) : null}
+          </Flex>
         </Stack>
       </form>
     </Container>
