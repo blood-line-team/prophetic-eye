@@ -16,6 +16,11 @@ const data = [
     label: "Team member experience",
     icon: <IconUsers size={16} />,
   },
+  {
+    link: Paths.TEAM_MEMBER,
+    label: "Team members  ",
+    icon: <IconUsers size={16} />,
+  },
 ];
 
 export function SideBar() {
