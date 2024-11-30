@@ -30,7 +30,7 @@ export default function ClientRequirement() {
       <Grid px={56} py={72} w="100%" gutter="xl">
         <Grid.Col
           span={8}
-          style={{ display: "flex", flexDirection: "column", gap: "32px" }}
+          style={{ display: "flex", flexDirection: "column", gap: "16px" }}
         >
           <Title>Client Information</Title>
           <span style={{ opacity: 0.5 }}>Client details</span>
@@ -43,9 +43,10 @@ export default function ClientRequirement() {
           />
           <Textarea
             label="Description"
-            placeholder="Description"
+            placeholder="Type description"
             size="md"
             key={form.key("description")}
+            styles={{ input: { minHeight: "150px" } }}
             {...form.getInputProps("description")}
           />
           <Stack align="end">

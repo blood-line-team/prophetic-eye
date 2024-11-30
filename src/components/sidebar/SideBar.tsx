@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { IconNotebook, IconUsers } from "@tabler/icons-react";
 import { Button, Group, Stack } from "@mantine/core";
 import { Paths } from "../../routes/path.routes";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const data = [
   {
@@ -23,19 +22,18 @@ const data = [
 ];
 
 export function SideBar() {
-  const [active, setActive] = useState(Paths.HOME);
+  const location = useLocation();
   const navigate = useNavigate();
 
   const links = data.map((item) => (
     <Button
       fullWidth
-      variant={active === item.link ? "light" : "transparent"}
+      variant={location.pathname === item.link ? "light" : "transparent"}
       fw="normal"
       color="gray.6"
       c="black"
       key={item.label}
       onClick={() => {
-        setActive(item.link);
         navigate(item.link);
       }}
       leftSection={item.icon}

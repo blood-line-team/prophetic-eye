@@ -88,9 +88,9 @@ export const TeamMemberExperience = () => {
     .teamMemberInformation.map((_, index) => (
       <Stack
         key={index}
-        gap={16}
+        gap={8}
         style={{
-          borderRadius: "24px",
+          borderRadius: "8px",
           position: "relative",
         }}
         bg="white"
@@ -108,10 +108,10 @@ export const TeamMemberExperience = () => {
             <IconTrash size={12} />
           </ActionIcon>
         </div>
+        <Text>Experience details</Text>
         <Autocomplete
           label="Team member"
           placeholder="Team member"
-          style={{ flex: 1 }}
           key={form.key(`teamMemberInformation.${index}.teamMember`)}
           {...form.getInputProps(`teamMemberInformation.${index}.teamMember`)}
           data={teamMembers}
@@ -119,7 +119,6 @@ export const TeamMemberExperience = () => {
         <Autocomplete
           label="Client"
           placeholder="Client name"
-          style={{ flex: 1 }}
           key={form.key(`teamMemberInformation.${index}.name`)}
           {...form.getInputProps(`teamMemberInformation.${index}.name`)}
           data={clientsData}
@@ -129,12 +128,8 @@ export const TeamMemberExperience = () => {
           label="Details and achievements"
           placeholder="Detail your experience with the client"
           key={form.key(`teamMemberInformation.${index}.description`)}
+          styles={{ input: { minHeight: "150px" } }}
           {...form.getInputProps(`teamMemberInformation.${index}.description`)}
-          h={100}
-          styles={{
-            wrapper: { height: "100%" },
-            input: { height: "100%" },
-          }}
         />
 
         {experienceUnits
@@ -187,9 +182,9 @@ export const TeamMemberExperience = () => {
                 position="left"
               >
                 <ActionIcon
-                  variant="default"
-                  color="gray"
-                  bg={"white"}
+                  variant="light"
+                  size="md"
+                  color="#5F14EF"
                   onClick={() => {
                     form.insertListItem("teamMemberInformation", {
                       name: "",
