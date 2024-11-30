@@ -3,6 +3,7 @@ import { IconLogout, IconNotebook, IconUsers } from "@tabler/icons-react";
 import { Button, Group, Stack } from "@mantine/core";
 import classes from "./sidebar.module.css";
 import { Paths } from "../../routes/path.routes";
+import { useNavigate } from "react-router-dom";
 
 const data = [
   {
@@ -19,6 +20,8 @@ const data = [
 
 export function SideBar() {
   const [active, setActive] = useState(Paths.HOME);
+  const navigate = useNavigate()
+
   const links = data.map((item) => (
     <Button
       fullWidth
@@ -27,9 +30,9 @@ export function SideBar() {
       color="gray.6"
       c="black"
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
+      onClick={() => {
         setActive(item.label);
+        navigate(item.link);
       }}
       leftSection={item.icon}
       justify="start"
